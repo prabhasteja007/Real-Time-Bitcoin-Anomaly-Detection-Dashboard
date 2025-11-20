@@ -3,7 +3,7 @@
 A live anomaly detection pipeline built for the course **Platforms for Big Data Processing**.  
 This system processes Bitcoin price data in real time using Kafka, Spark Structured Streaming, and visualizes detected anomalies in a responsive Streamlit dashboard.
 
-![Dashboard Snapshot](./BTC%20Anomaly%20Dashboard-1.png)
+![Dashboard Snapshot](./BTC%20Anomaly%20Dashboard_page-0001.jpg)
 
 ---
 
