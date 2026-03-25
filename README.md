@@ -16,7 +16,7 @@ Coinbase WebSocket → Kafka → Spark Streaming (PySpark) → JSON file → Str
 - **Kafka**: Message broker for price ticks  
 - **Spark**: Detects 4 types of real-time price anomalies  
 - **Streamlit**: Displays anomalies with filtering, charts, and live updates  
-
+![Data Stack Diagram](./data%20stack%20diagram.png)
 ---
 
 ## 🚨 Detected Anomalies
