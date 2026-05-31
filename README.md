@@ -13,9 +13,7 @@
 
 ---
 
-<!-- Replace the line below with your actual dashboard screenshot or GIF -->
-> 📸 **Add your dashboard screenshot here** — take a screenshot of localhost:8501 and save it as `docs/dashboard.png`, then update this line:
-> `![Dashboard](docs/dashboard.png)`
+![Dashboard Demo](docs/dashboard.gif)
 
 ---
 
