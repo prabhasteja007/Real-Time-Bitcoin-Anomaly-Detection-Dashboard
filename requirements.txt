@@ -1,8 +1,0 @@
-builtins
-kafka-python
-pandas
-pyspark
-streamlit
-streamlit-autorefresh
-traceback
-websocket-client
