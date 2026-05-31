@@ -1,0 +1,80 @@
+# Shared volume so consumer writes anomalies.json and dashboard reads it
+volumes:
+  anomaly_data:
+
+networks:
+  btc_net:
+    driver: bridge
+
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    networks: [btc_net]
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    networks: [btc_net]
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "kafka:9092"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  producer:
+    build: ./producer
+    networks: [btc_net]
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      KAFKA_BROKER: kafka:9092
+      KAFKA_TOPIC: bitcoin-prices
+    restart: on-failure
+
+  consumer:
+    build: ./consumer
+    networks: [btc_net]
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      KAFKA_BROKER: kafka:9092
+      KAFKA_TOPIC: bitcoin-prices
+      ENABLE_LSTM: "true"
+      ANOMALY_FILE: /shared/anomalies.json
+      PRICE_FILE: /shared/prices_live.json
+    volumes:
+      - anomaly_data:/shared
+    restart: on-failure
+
+  dashboard:
+    build: ./dashboard
+    networks: [btc_net]
+    depends_on:
+      - consumer
+    ports:
+      - "8501:8501"
+    environment:
+      SHARED_DIR: /shared
+      ANOMALY_FILE: /shared/anomalies.json
+    volumes:
+      - anomaly_data:/shared
+    restart: on-failure
