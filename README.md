@@ -51,13 +51,16 @@
 
 | Metric | Value |
 |---|---|
-| Trade throughput | ~0.6 ticks/sec (Kraken XBT/USD) |
+| Trade throughput | 0.75 trades/sec (Kraken XBT/USD live) |
 | End-to-end latency | < 6 seconds (WebSocket → dashboard) |
 | Spark batch trigger | 3 seconds |
-| IF model retraining | Every 500 ticks (online learning) |
-| LSTM max anomaly score | 2.28× detection threshold |
-| Max price jump detected | $42.70 in a single tick |
-| Anomaly detection layers | 3 (rule + ML + deep learning) |
+| Anomaly rate | 7.2% across 500+ live events |
+| Severity breakdown | 44% HIGH · 33% MED · 22% LOW |
+| IF score avg / max | 0.52 / 0.62 (online retraining every 500 ticks) |
+| LSTM score at threshold | 1.0007 — adaptive threshold, fires selectively |
+| Max price jump detected | $24.80 in a single tick |
+| Avg price move at anomaly | $14.43 (Δ% = 0.0196%) |
+| Anomaly detection layers | 3 (rule-based + Isolation Forest + LSTM) |
 
 ---
 
